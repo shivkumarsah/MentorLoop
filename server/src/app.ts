@@ -77,38 +77,9 @@ export function createApp(): express.Application {
   app.use('/api/explain', explainRouter);
   app.use('/api/quiz', quizRouter);
 
-  // ---- Health check & API Index ---------------------------
-  app.get('/', (_req, res) => {
-    res.json({
-      name: 'MentorLoop API',
-      version: '1.0.0',
-      status: 'active',
-      frontend: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
-      endpoints: [
-        '/api/health',
-        '/api/session',
-        '/api/diagnostic/answer',
-        '/api/mastery/:sessionId',
-        '/api/explain',
-        '/api/quiz/next',
-        '/api/quiz/answer'
-      ]
-    });
-  });
-
+  // ---- Health check ----------------------------------------
   app.get('/api/health', (_req, res) => {
     res.json({ status: 'ok', timestamp: new Date().toISOString() });
-  });
-
-  // ---- 404 handler -----------------------------------------
-  app.use((_req, res) => {
-    res.status(404).json({ error: 'Route not found' });
-  });
-
-  // ---- Global error handler --------------------------------
-  app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
-    console.error('Unhandled error:', err.message);
-    res.status(500).json({ error: 'Internal server error' });
   });
 
   // ---- Serve Static Frontend -------------------------------
@@ -119,7 +90,37 @@ export function createApp(): express.Application {
     if (_req.path.startsWith('/api')) {
       return next();
     }
-    res.sendFile(path.join(clientDistPath, 'index.html'));
+    res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
+      if (err) {
+        // If client/dist/index.html is not found (e.g. dev mode without build), return API info
+        res.json({
+          name: 'MentorLoop API',
+          version: '1.0.0',
+          status: 'active',
+          frontend: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
+          endpoints: [
+            '/api/health',
+            '/api/session',
+            '/api/diagnostic/answer',
+            '/api/mastery/:sessionId',
+            '/api/explain',
+            '/api/quiz/next',
+            '/api/quiz/answer',
+          ],
+        });
+      }
+    });
+  });
+
+  // ---- 404 handler for API routes --------------------------
+  app.use((_req, res) => {
+    res.status(404).json({ error: 'Route not found' });
+  });
+
+  // ---- Global error handler --------------------------------
+  app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+    console.error('Unhandled error:', err.message);
+    res.status(500).json({ error: 'Internal server error' });
   });
 
   return app;
