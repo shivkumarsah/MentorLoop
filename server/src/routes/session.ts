@@ -7,6 +7,7 @@ import { Router, type Request, type Response } from 'express';
 import { z } from 'zod';
 import { getGeminiService } from '../gemini-service.js';
 import { createSession } from '../db.js';
+import { sanitizeString } from '../utils/sanitize.js';
 import type { SessionCreateRequest, SessionCreateResponse } from '../../../shared/types.js';
 
 export const sessionRouter = Router();
@@ -16,7 +17,7 @@ const SessionCreateSchema = z.object({
     .string()
     .min(2, 'Topic must be at least 2 characters')
     .max(200, 'Topic must be at most 200 characters')
-    .transform((s) => s.trim()),
+    .transform((s) => sanitizeString(s, 200)),
 });
 
 sessionRouter.post('/', async (req: Request, res: Response): Promise<void> => {

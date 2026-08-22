@@ -7,6 +7,7 @@
  */
 
 import express from 'express';
+import helmet from 'helmet';
 import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import 'dotenv/config';
@@ -26,33 +27,50 @@ import { quizRouter } from './routes/quiz.js';
 export function createApp(): express.Application {
   const app = express();
 
-  // ---- Body parsing ----------------------------------------
-  app.use(express.json({ limit: '10kb' })); // limit payload size
+  // ---- Security Headers (Helmet) ---------------------------
+  app.use(
+    helmet({
+      contentSecurityPolicy: false, // Managed for SPA client bundles
+      crossOriginEmbedderPolicy: false,
+    })
+  );
 
-  // ---- CORS ------------------------------------------------
+  // ---- Body parsing & payload limits -----------------------
+  app.use(express.json({ limit: '10kb' }));
+  app.use(express.urlencoded({ extended: false, limit: '10kb' }));
+
+  // ---- CORS (Strict & Secure) ------------------------------
   const configuredOrigins = (process.env['CORS_ORIGIN'] ?? 'http://localhost:5173')
     .split(',')
-    .map((o) => o.trim());
+    .map((o) => o.trim())
+    .filter(Boolean);
+
+  const isOriginAllowed = (origin: string | undefined): boolean => {
+    if (!origin) return true; // allow same-origin, curl, server-to-server
+    if (configuredOrigins.includes('*') || configuredOrigins.includes(origin)) return true;
+    try {
+      const parsedUrl = new URL(origin);
+      if (parsedUrl.hostname === 'localhost' || parsedUrl.hostname === '127.0.0.1') return true;
+      if (parsedUrl.hostname.endsWith('.run.app')) return true;
+    } catch {
+      return false;
+    }
+    return false;
+  };
 
   app.use(
     cors({
       origin: (origin, callback) => {
-        // Allow requests with no origin (e.g., mobile apps, curl, same-origin)
-        if (
-          !origin ||
-          configuredOrigins.includes(origin) ||
-          origin.includes('.run.app') ||
-          origin.includes('localhost') ||
-          origin.includes('127.0.0.1')
-        ) {
+        if (isOriginAllowed(origin)) {
           callback(null, true);
         } else {
-          callback(null, true); // Allow all browser web traffic gracefully
+          callback(new Error(`CORS policy violation: origin ${origin} is not authorized`));
         }
       },
       methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
       credentials: true,
+      maxAge: 86400,
     })
   );
 
