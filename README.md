@@ -2,6 +2,7 @@
 
 > **Hackathon**: PromptWars-Pilot (Google for Developers)
 > **Vertical**: Adaptive Learning Intelligence System
+> **Live Demo (Google Cloud Run)**: [https://mentorloop-687233290294.us-central1.run.app](https://mentorloop-687233290294.us-central1.run.app)
 
 ---
 
