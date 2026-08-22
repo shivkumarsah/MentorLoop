@@ -48,7 +48,7 @@ describe('Dashboard Page', () => {
       },
       weakConcepts: ['Loops'],
       strongConcepts: ['Variables'],
-      lastUpdated: new Date().toISOString(),
+      recommendedNext: 'quiz',
     });
 
     render(

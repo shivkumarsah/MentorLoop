@@ -20,16 +20,25 @@ describe('ExplainView Page', () => {
       topic: 'Python basics',
       overallMastery: 0.5,
       masteryMap: {
-        'Variables': { score: 0.5, history: [] },
+        Variables: {
+          concept: 'Variables',
+          score: 0.5,
+          attempts: 1,
+          correctAttempts: 1,
+          lastUpdated: new Date().toISOString(),
+          trend: [0.5],
+        },
       },
       weakConcepts: [],
       strongConcepts: [],
-      lastUpdated: new Date().toISOString(),
+      recommendedNext: 'quiz',
     });
 
     vi.spyOn(clientApi, 'getExplanation').mockResolvedValueOnce({
       concept: 'Variables',
       explanation: 'A variable is a labeled container for data values.',
+      style: 'beginner',
+      masteryLevel: 0.5,
       cached: false,
     });
 
