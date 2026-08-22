@@ -1,0 +1,28 @@
+{
+  "name": "mentorloop",
+  "version": "1.0.0",
+  "description": "MentorLoop — AI-powered adaptive learning companion",
+  "private": true,
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "dev:server": "npm run dev --workspace=server",
+    "dev:client": "npm run dev --workspace=client",
+    "test": "npm run test --workspace=server && npm run test --workspace=client",
+    "test:server": "npm run test --workspace=server",
+    "test:client": "npm run test --workspace=client",
+    "lint": "npm run lint --workspace=server && npm run lint --workspace=client",
+    "install:all": "npm install --workspace=server && npm install --workspace=client"
+  },
+  "keywords": [
+    "adaptive-learning",
+    "ai",
+    "gemini",
+    "knowledge-tracing",
+    "hackathon"
+  ],
+  "author": "MentorLoop Team",
+  "license": "MIT"
+}

@@ -1,0 +1,40 @@
+<svg viewBox="0 0 640 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="loopGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6C5CE7"/>
+      <stop offset="100%" stop-color="#00CEC9"/>
+    </linearGradient>
+    <linearGradient id="dotGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#00CEC9"/>
+      <stop offset="100%" stop-color="#6C5CE7"/>
+    </linearGradient>
+    <linearGradient id="textGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#6C5CE7"/>
+      <stop offset="100%" stop-color="#00CEC9"/>
+    </linearGradient>
+  </defs>
+
+  <!-- icon badge -->
+  <rect x="0" y="0" width="200" height="200" rx="40" fill="#12131A"/>
+
+  <path d="M 135,40 A 70,70 0 1 1 65,40"
+        fill="none" stroke="url(#loopGrad2)" stroke-width="14"
+        stroke-linecap="round"/>
+
+  <path d="M 44,26 L 76,32 L 58,58 Z" fill="#00CEC9"/>
+
+  <circle cx="100" cy="100" r="15" fill="url(#dotGrad2)"/>
+  <circle cx="100" cy="55" r="6" fill="#6C5CE7"/>
+  <circle cx="138" cy="122" r="6" fill="#00CEC9"/>
+  <circle cx="62" cy="122" r="6" fill="#A29BFE"/>
+
+  <!-- wordmark -->
+  <text x="228" y="102" font-family="'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="56" font-weight="700" fill="#12131A">Mentor</text>
+  <text x="228" y="150" font-family="'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="56" font-weight="700" fill="url(#textGrad)">Loop</text>
+  <text x="230" y="178" font-family="'Segoe UI', Helvetica, Arial, sans-serif"
+        font-size="18" font-weight="400" fill="#6b6f80" letter-spacing="2">
+    ADAPTIVE LEARNING, POWERED BY AI
+  </text>
+</svg>

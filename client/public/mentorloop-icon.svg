@@ -1,0 +1,28 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="loopGradIcon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#7C3AED"/>
+      <stop offset="100%" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="dotGradIcon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06B6D4"/>
+      <stop offset="100%" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+
+  <!-- icon badge background -->
+  <rect x="0" y="0" width="200" height="200" rx="44" fill="#16162a" stroke="rgba(255,255,255,0.1)" stroke-width="2"/>
+
+  <!-- adaptive loop -->
+  <path d="M 135,40 A 70,70 0 1 1 65,40"
+        fill="none" stroke="url(#loopGradIcon)" stroke-width="14"
+        stroke-linecap="round"/>
+
+  <path d="M 44,26 L 76,32 L 58,58 Z" fill="#06B6D4"/>
+
+  <!-- nodes representing knowledge tracing -->
+  <circle cx="100" cy="100" r="16" fill="url(#dotGradIcon)"/>
+  <circle cx="100" cy="55" r="7" fill="#7C3AED"/>
+  <circle cx="138" cy="122" r="7" fill="#06B6D4"/>
+  <circle cx="62" cy="122" r="7" fill="#A78BFA"/>
+</svg>

@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "gcloud": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@googlecloud/mcp-server-gcloud"
+      ]
+    }
+  }
+}

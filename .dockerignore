@@ -1,0 +1,8 @@
+node_modules
+.env
+.git
+.DS_Store
+dist
+server/dist
+client/dist
+db.json
