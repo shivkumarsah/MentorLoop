@@ -1,10 +1,4 @@
-/**
- * FeedbackBanner.tsx
- *
- * ARIA live region feedback banner.
- * Announces correct/incorrect results to screen readers immediately.
- * Uses both icon + text + color for accessibility (not color alone).
- */
+import type { ReactElement } from 'react';
 
 interface FeedbackBannerProps {
   isCorrect: boolean;
@@ -18,7 +12,7 @@ export default function FeedbackBanner({
   message,
   masteryDelta,
   visible,
-}: FeedbackBannerProps): JSX.Element {
+}: FeedbackBannerProps): ReactElement {
   if (!visible) {
     // Still render (for layout stability) but hidden from sighted users
     // The live region is always present so screen readers can detect changes

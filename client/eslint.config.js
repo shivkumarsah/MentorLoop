@@ -6,14 +6,14 @@ import globals from 'globals';
 export default [
   js.configs.recommended,
   {
-    files: ['src/**/*.ts'],
+    files: ['src/**/*.{ts,tsx}'],
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
       },
       globals: {
-        ...globals.node,
+        ...globals.browser,
         ...globals.es2022,
       },
     },

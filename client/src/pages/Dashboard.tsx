@@ -5,14 +5,14 @@
  * recommended next action, navigation to explain/quiz.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getMastery } from '../api/client';
 import MasteryBar from '../components/MasteryBar';
 import Navbar from '../components/Navbar';
 import type { MasteryResponse } from '@shared/types';
 
-export default function Dashboard(): JSX.Element {
+export default function Dashboard(): ReactElement {
   const navigate = useNavigate();
   const [sessionId] = useState(() => sessionStorage.getItem('sessionId') ?? '');
   const [topic] = useState(() => sessionStorage.getItem('topic') ?? '');

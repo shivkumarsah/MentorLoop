@@ -5,14 +5,14 @@
  * Learner can toggle between "beginner" and "technical" style.
  */
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getExplanation, getMastery } from '../api/client';
 import MasteryBar from '../components/MasteryBar';
 import Navbar from '../components/Navbar';
 import type { ExplanationStyle } from '@shared/types';
 
-export default function ExplainView(): JSX.Element {
+export default function ExplainView(): ReactElement {
   const navigate = useNavigate();
   const [sessionId] = useState(() => sessionStorage.getItem('sessionId') ?? '');
   const [topic] = useState(() => sessionStorage.getItem('topic') ?? '');

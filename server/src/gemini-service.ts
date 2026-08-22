@@ -122,7 +122,7 @@ Output (JSON array only):
     if (!Array.isArray(parsed) || parsed.length === 0) {
       // Fallback: extract concept-like strings from the text
       const lines = text.split('\n').filter((l) => l.trim().startsWith('"') || l.trim().startsWith('-'));
-      const concepts = lines.map((l) => l.replace(/["\-,\[\]]/g, '').trim()).filter(Boolean);
+      const concepts = lines.map((l) => l.replace(/["\-,[\]]/g, '').trim()).filter(Boolean);
       return concepts.length > 0
         ? concepts.slice(0, 6)
         : ['Core Concepts', 'Fundamentals', 'Applications', 'Advanced Topics'];
@@ -158,16 +158,17 @@ Output (JSON array only):
 
     const result = await this.model.generateContent(prompt);
     const text = result.response.text();
-    const parsed = tryParseJSON<any>(text);
+    type RawQuestion = Omit<DiagnosticQuestion, 'id' | 'type'>;
+    const parsed = tryParseJSON<RawQuestion[] | { questions?: RawQuestion[]; question?: string }>(text);
 
-    let questionsList: Array<Omit<DiagnosticQuestion, 'id' | 'type'>> = [];
+    let questionsList: RawQuestion[] = [];
     if (Array.isArray(parsed)) {
       questionsList = parsed;
     } else if (parsed && typeof parsed === 'object') {
-      if (Array.isArray(parsed.questions)) {
+      if ('questions' in parsed && Array.isArray(parsed.questions)) {
         questionsList = parsed.questions;
-      } else if (parsed.question) {
-        questionsList = [parsed];
+      } else if ('question' in parsed && typeof parsed.question === 'string') {
+        questionsList = [parsed as RawQuestion];
       }
     }
 
@@ -294,6 +295,67 @@ Be encouraging and educational. Do NOT start with "I" or "The student".
   }
 }
 
+// ---- Built-in Mock Service (for testing and offline development) ----
+
+export class MockGeminiService implements GeminiService {
+  async extractConcepts(topic: string): Promise<string[]> {
+    if (topic.toLowerCase().includes('python')) {
+      return ['Variables', 'Data Types', 'Control Flow', 'Functions', 'OOP Basics'];
+    }
+    return [`${topic} Fundamentals`, `${topic} Core Principles`, `${topic} Applications`, `${topic} Advanced Methods`];
+  }
+
+  async generateDiagnosticQuestions(topic: string, concepts: string[], count: number): Promise<DiagnosticQuestion[]> {
+    return concepts.slice(0, count).map((concept, idx) => ({
+      id: uuidv4(),
+      type: 'multiple-choice',
+      concept,
+      question: `What is the primary significance of ${concept} in ${topic}?`,
+      options: [
+        `A) Core fundamental mechanism for ${concept}`,
+        `B) Secondary auxiliary function`,
+        `C) Unrelated legacy concept`,
+        `D) Deprecated syntax pattern`,
+      ],
+      correctAnswer: `A) Core fundamental mechanism for ${concept}`,
+      difficulty: idx === 0 ? 'easy' : idx === 1 ? 'medium' : 'hard',
+    }));
+  }
+
+  async generateExplanation(concept: string, topic: string, _masteryLevel: number, style: ExplanationStyle): Promise<string> {
+    if (style === 'beginner') {
+      return `Think of ${concept} in ${topic} like a labeled box in a storage room. It stores values safely and makes them easy to find whenever your program needs them.`;
+    }
+    return `In ${topic}, ${concept} is a fundamental architectural building block that provides memory binding, state encapsulation, and precise control flow primitives.`;
+  }
+
+  async generateQuizQuestion(concept: string, topic: string, difficulty: DifficultyLevel): Promise<QuizQuestion> {
+    return {
+      id: uuidv4(),
+      type: 'multiple-choice',
+      concept,
+      question: `In ${topic}, which statement correctly characterizes ${concept}?`,
+      options: [
+        `A) Primary mechanism for executing ${concept} logic`,
+        `B) An optional configuration flag`,
+        `C) Standard error code`,
+        `D) Network latency threshold`,
+      ],
+      correctAnswer: `A) Primary mechanism for executing ${concept} logic`,
+      difficulty,
+      rationale: `Selected because ${concept} is an active learning target`,
+    };
+  }
+
+  async generateMisconceptionFeedback(concept: string, _question: string, _wrongAnswer: string, _correctAnswer: string): Promise<string> {
+    return `Not quite. In ${concept}, the selected option is a common misconception. Remember that ${concept} directly regulates state rather than acting as a static configuration.`;
+  }
+}
+
+export function createMockGeminiService(): GeminiService {
+  return new MockGeminiService();
+}
+
 // ---- Factory -----------------------------------------------
 
 let _serviceInstance: GeminiService | null = null;
@@ -321,3 +383,4 @@ export function setGeminiService(service: GeminiService): void {
 export function resetGeminiService(): void {
   _serviceInstance = null;
 }
+

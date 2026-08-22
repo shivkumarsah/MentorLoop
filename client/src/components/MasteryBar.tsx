@@ -1,9 +1,4 @@
-/**
- * MasteryBar.tsx
- *
- * Accessible mastery progress bar with animated fill.
- * Uses ARIA attributes so screen readers can announce the value.
- */
+import type { ReactElement } from 'react';
 
 interface MasteryBarProps {
   concept: string;
@@ -39,7 +34,7 @@ export default function MasteryBar({
   showLabel = true,
   size = 'md',
   animate = true,
-}: MasteryBarProps): JSX.Element {
+}: MasteryBarProps): ReactElement {
   const pct = Math.round(score * 100);
   const fillClass = getMasteryClass(score);
   const label = getMasteryLabel(score);

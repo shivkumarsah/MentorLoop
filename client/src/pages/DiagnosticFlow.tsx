@@ -6,7 +6,7 @@
  * ARIA live region announces transitions.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { submitDiagnosticAnswer } from '../api/client';
 import QuestionCard from '../components/QuestionCard';
@@ -16,7 +16,7 @@ import type { DiagnosticQuestion } from '@shared/types';
 
 const TOTAL_QUESTIONS = 5;
 
-export default function DiagnosticFlow(): JSX.Element {
+export default function DiagnosticFlow(): ReactElement {
   const navigate = useNavigate();
   const [sessionId] = useState(() => sessionStorage.getItem('sessionId') ?? '');
   const [topic] = useState(() => sessionStorage.getItem('topic') ?? '');

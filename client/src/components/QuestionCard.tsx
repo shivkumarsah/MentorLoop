@@ -1,10 +1,4 @@
-/**
- * QuestionCard.tsx
- *
- * Accessible question card with keyboard-navigable answer options.
- * Uses <button> elements (not div onClick) for full keyboard support.
- */
-
+import type { ReactElement, CSSProperties } from 'react';
 import type { DifficultyLevel } from '@shared/types';
 
 interface QuestionCardProps {
@@ -31,7 +25,7 @@ export default function QuestionCard({
   questionNumber,
   totalQuestions,
   rationale,
-}: QuestionCardProps): JSX.Element {
+}: QuestionCardProps): ReactElement {
   function getOptionState(option: string): 'default' | 'selected' | 'correct' | 'wrong' | 'missed' {
     if (!submitted) {
       return selectedAnswer === option ? 'selected' : 'default';
@@ -41,7 +35,7 @@ export default function QuestionCard({
     return 'default';
   }
 
-  const optionStyles: Record<ReturnType<typeof getOptionState>, React.CSSProperties> = {
+  const optionStyles: Record<ReturnType<typeof getOptionState>, CSSProperties> = {
     default: {
       background: 'var(--color-bg-glass)',
       border: '1px solid var(--color-border)',

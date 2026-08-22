@@ -5,7 +5,7 @@
  * submits answers, shows Gemini-powered feedback, and updates mastery.
  */
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getNextQuizQuestion, submitQuizAnswer } from '../api/client';
 import QuestionCard from '../components/QuestionCard';
@@ -16,7 +16,7 @@ import type { QuizQuestion, MasteryMap } from '@shared/types';
 
 const QUIZ_LENGTH = 8;
 
-export default function QuizFlow(): JSX.Element {
+export default function QuizFlow(): ReactElement {
   const navigate = useNavigate();
   const [sessionId] = useState(() => sessionStorage.getItem('sessionId') ?? '');
   const [topic] = useState(() => sessionStorage.getItem('topic') ?? '');

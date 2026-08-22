@@ -5,7 +5,7 @@
  * Accessible: labeled form input, semantic button, keyboard-navigable.
  */
 
-import { useState, type FormEvent } from 'react';
+import { useState, type FormEvent, type ReactElement } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { createSession } from '../api/client';
 import Navbar from '../components/Navbar';
@@ -21,7 +21,7 @@ const EXAMPLE_TOPICS = [
   'Climate science',
 ];
 
-export default function TopicPicker(): JSX.Element {
+export default function TopicPicker(): ReactElement {
   const [topic, setTopic] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);

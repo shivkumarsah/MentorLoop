@@ -1,3 +1,4 @@
+import type { ReactElement } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface NavbarProps {
@@ -14,7 +15,7 @@ export default function Navbar({
   showNewTopicButton = false,
   showDashboardButton = false,
   scoreText,
-}: NavbarProps): JSX.Element {
+}: NavbarProps): ReactElement {
   const navigate = useNavigate();
 
   return (
