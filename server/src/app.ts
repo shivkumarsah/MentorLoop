@@ -11,6 +11,7 @@ import cors from 'cors';
 import rateLimit from 'express-rate-limit';
 import 'dotenv/config';
 import path from 'path';
+import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -83,33 +84,46 @@ export function createApp(): express.Application {
   });
 
   // ---- Serve Static Frontend -------------------------------
-  const clientDistPath = path.join(__dirname, '../../client/dist');
+  const candidatePaths = [
+    path.resolve(__dirname, '../../../../client/dist'),
+    path.resolve(__dirname, '../../../client/dist'),
+    path.resolve(__dirname, '../../client/dist'),
+    path.resolve(process.cwd(), '../client/dist'),
+    path.resolve(process.cwd(), 'client/dist'),
+    path.resolve(process.cwd(), '../../client/dist'),
+    '/app/client/dist',
+  ];
+
+  const clientDistPath =
+    candidatePaths.find((p) => fs.existsSync(path.join(p, 'index.html'))) ||
+    path.resolve(process.cwd(), '../client/dist');
+
   app.use(express.static(clientDistPath));
 
   app.get('*', (_req, res, next) => {
     if (_req.path.startsWith('/api')) {
       return next();
     }
-    res.sendFile(path.join(clientDistPath, 'index.html'), (err) => {
-      if (err) {
-        // If client/dist/index.html is not found (e.g. dev mode without build), return API info
-        res.json({
-          name: 'MentorLoop API',
-          version: '1.0.0',
-          status: 'active',
-          frontend: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
-          endpoints: [
-            '/api/health',
-            '/api/session',
-            '/api/diagnostic/answer',
-            '/api/mastery/:sessionId',
-            '/api/explain',
-            '/api/quiz/next',
-            '/api/quiz/answer',
-          ],
-        });
-      }
-    });
+    const indexPath = path.join(clientDistPath, 'index.html');
+    if (fs.existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.json({
+        name: 'MentorLoop API',
+        version: '1.0.0',
+        status: 'active',
+        frontend: process.env['CORS_ORIGIN'] ?? 'http://localhost:5173',
+        endpoints: [
+          '/api/health',
+          '/api/session',
+          '/api/diagnostic/answer',
+          '/api/mastery/:sessionId',
+          '/api/explain',
+          '/api/quiz/next',
+          '/api/quiz/answer',
+        ],
+      });
+    }
   });
 
   // ---- 404 handler for API routes --------------------------
