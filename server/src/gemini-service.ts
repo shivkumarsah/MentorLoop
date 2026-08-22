@@ -13,12 +13,29 @@ import { v4 as uuidv4 } from 'uuid';
 // ---- Interface (for mocking in tests) ----------------------
 
 export interface GeminiService {
+  /**
+   * Generates a set of diagnostic questions to test the learner's initial knowledge.
+   *
+   * @param topic - The overarching topic to learn
+   * @param concepts - Specific concepts within the topic to target
+   * @param count - Number of questions to generate
+   * @returns A promise resolving to an array of diagnostic questions
+   */
   generateDiagnosticQuestions(
     topic: string,
     concepts: string[],
     count: number
   ): Promise<DiagnosticQuestion[]>;
 
+  /**
+   * Generates a tailored explanation for a specific concept.
+   *
+   * @param concept - The concept to explain
+   * @param topic - The overarching topic
+   * @param masteryLevel - The learner's current mastery level [0, 1] for adaptive complexity
+   * @param style - The requested teaching style (e.g., beginner, socratic, technical)
+   * @returns A promise resolving to the explanation text
+   */
   generateExplanation(
     concept: string,
     topic: string,
@@ -26,12 +43,29 @@ export interface GeminiService {
     style: ExplanationStyle
   ): Promise<string>;
 
+  /**
+   * Generates an adaptive quiz question.
+   *
+   * @param concept - The target concept for the question
+   * @param topic - The overarching topic context
+   * @param difficulty - The desired difficulty level based on learner's mastery
+   * @returns A promise resolving to a structured quiz question
+   */
   generateQuizQuestion(
     concept: string,
     topic: string,
     difficulty: DifficultyLevel
   ): Promise<QuizQuestion>;
 
+  /**
+   * Generates constructive feedback addressing a specific misconception.
+   *
+   * @param concept - The concept being tested
+   * @param question - The text of the question asked
+   * @param wrongAnswer - The incorrect answer provided by the learner
+   * @param correctAnswer - The actual correct answer
+   * @returns A promise resolving to the targeted feedback
+   */
   generateMisconceptionFeedback(
     concept: string,
     question: string,
@@ -39,6 +73,12 @@ export interface GeminiService {
     correctAnswer: string
   ): Promise<string>;
 
+  /**
+   * Extracts distinct sub-concepts from a broad topic.
+   *
+   * @param topic - The broad topic to decompose
+   * @returns A promise resolving to an array of concept names
+   */
   extractConcepts(topic: string): Promise<string[]>;
 }
 

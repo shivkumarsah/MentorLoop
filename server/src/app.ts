@@ -26,11 +26,23 @@ import { quizRouter } from './routes/quiz.js';
 
 export function createApp(): express.Application {
   const app = express();
+  
+  // ---- Trust Proxy (Required for Cloud Run & Rate Limiting)
+  app.set('trust proxy', 1);
 
   // ---- Security Headers (Helmet) ---------------------------
   app.use(
     helmet({
-      contentSecurityPolicy: false, // Managed for SPA client bundles
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'", "'unsafe-inline'"],
+          styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
+          fontSrc: ["'self'", "https://fonts.gstatic.com"],
+          imgSrc: ["'self'", "data:"],
+          connectSrc: ["'self'", "https://generativelanguage.googleapis.com"],
+        },
+      },
       crossOriginEmbedderPolicy: false,
     })
   );
